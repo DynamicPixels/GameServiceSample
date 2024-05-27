@@ -12,23 +12,12 @@ using DynamicPixels.GameService.Services.MultiPlayer.Room;
 
 public class TestScript : MonoBehaviour
 {
+    private static Room _room;
+
     // Start is called before the first frame update
     void Start()
     {
-        //var input = new LoginAsGuestParams();
-        //ServiceHub.Authentication.LoginAsGuest(input);
-
-        //var room = ServiceHub.Services.MultiPlayer.RoomService.CreateAndOpenRoom(new CreateRoomParams
-        //{
-        //    MinPlayer = 2,
-        //    MaxPlayer = 2,
-        //    IsPrivate = true,
-        //    IsPermanent = true,
-        //    Name = "123",
-        //    Players = {}
-        //}).GetAwaiter().GetResult();
-
-        //room.Broadcast("sdfsdf");
+        //DynamicPixels.GameService.ServiceHub.A
     }
 
     // Update is called once per frame
@@ -69,13 +58,39 @@ public class TestScript : MonoBehaviour
                 State = RoomState.Open
             };
 
-            var currentRoom = await ServiceHub.Services.MultiPlayer.RoomService.CreateRoom(input);
+            _room = await ServiceHub.Services.MultiPlayer.RoomService.CreateRoom(input);
+            
+            BindRoomEventHandlers();
 
-            Debug.Log(JsonConvert.SerializeObject(currentRoom));
+            Debug.Log(JsonConvert.SerializeObject(_room));
         }
         catch (Exception e)
         {
             Debug.LogException(e);
         }
+    }
+
+    public async void BroadcastToRoom()
+    {
+        try
+        {
+            await _room.Broadcast("Hello");
+
+            Debug.Log("Message has Sent");
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
+
+    private void BindRoomEventHandlers()
+    {
+        _room.OnMessageReceived += OnMessageReceive;
+    }
+
+    private void OnMessageReceive(object src, Request req)
+    {
+        Debug.Log($"Message Received: {req.Payload}");
     }
 }
