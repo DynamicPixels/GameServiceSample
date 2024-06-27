@@ -70,6 +70,34 @@ public class TestScript : MonoBehaviour
         }
     }
 
+    public async void JoinToRoomById()
+    {
+        try
+        {
+            await ServiceHub.Services.MultiPlayer.RoomService.Join(_room.Id);
+
+            Debug.Log("Joint to room.");
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
+
+    public async void LeaveRoom()
+    {
+        try
+        {
+            await ServiceHub.Services.MultiPlayer.RoomService.Leave(_room.Id);
+
+            Debug.Log("Left the room.");
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
+
     public async void BroadcastToRoom()
     {
         try
