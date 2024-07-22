@@ -7,12 +7,14 @@ using DynamicPixels.GameService;
 using DynamicPixels.GameService.Models;
 using DynamicPixels.GameService.Services.MultiPlayer.Room.Models;
 using DynamicPixels.GameService.Services.Authentication.Models;
+using DynamicPixels.GameService.Services.MultiPlayer.Match;
 using Newtonsoft.Json;
 using DynamicPixels.GameService.Services.MultiPlayer.Room;
 
 public class TestScript : MonoBehaviour
 {
     private static Room _room;
+    private static Match _match;
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +25,7 @@ public class TestScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public async void LoginAsGuest()
@@ -55,11 +57,11 @@ public class TestScript : MonoBehaviour
                 IsPrivate = true,
                 IsPermanent = true,
                 Name = "RoomName",
-                State = RoomState.Open
+                State = RoomStatus.Open
             };
 
             _room = await ServiceHub.Services.MultiPlayer.RoomService.CreateRoom(input);
-            
+
             BindRoomEventHandlers();
 
             Debug.Log(JsonConvert.SerializeObject(_room));
@@ -110,6 +112,23 @@ public class TestScript : MonoBehaviour
         {
             Debug.LogException(e);
         }
+    }
+
+    public async void MakeAndStartMatch()
+    {
+        _match = await ServiceHub.Services.MultiPlayer.MatchService.MakeAndStartMatch(_room.Id, false);
+        Debug.Log(JsonConvert.SerializeObject(_match));
+    }
+
+    public async void SaveState()
+    {
+        await _match.SaveState("currentState", "st" + DateTime.Now);
+    }
+
+    public async void LoadState()
+    {
+        var st = await _match.LoadState("currentState");
+        Debug.Log("Current State: " + st);
     }
 
     private void BindRoomEventHandlers()
