@@ -46,6 +46,18 @@ public class TestScript : MonoBehaviour
         }
     }
 
+    public async void LoginWithEmail()
+    {
+        RegisterWithEmailParams emailParams = new()
+        {
+            Email = "akka115@yahoo.com",
+            Password = "abc1231456718.@A",
+            Name = "akka115"
+        };
+        var result = await ServiceHub.Authentication.RegisterWithEmail(emailParams);
+        Debug.Log(JsonConvert.SerializeObject(result.User));
+    }
+
     public async void CreateRoom()
     {
         try
