@@ -69,7 +69,7 @@ public class TestScript : MonoBehaviour
                 IsPrivate = true,
                 IsPermanent = true,
                 Name = "RoomName",
-                State = RoomStatus.Open
+                Status = RoomStatus.Open
             };
 
             _room = await ServiceHub.Services.MultiPlayer.RoomService.CreateRoom(input);
